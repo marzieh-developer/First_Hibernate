@@ -8,5 +8,6 @@ package com.RestHibeCrudr;
  *
  */
 public class EmpDao {
+	public  void insert () {}
 
 }
