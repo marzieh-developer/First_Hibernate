@@ -13,11 +13,11 @@ import org.hibernate.cfg.Configuration;
 
 @SuppressWarnings("deprecation")
 public class EmployeeDAO {
+	
 	SessionFactory sf = new Configuration().configure("/resource/hibernate.cfg.xml").buildSessionFactory();
 	Session session = sf.openSession();
 	Transaction tx = session.beginTransaction();
-
-	
+/////////////////////////////////////////////////// post
 	public Employee addEmployee(Employee emp) {
 		emp.setAge(emp.getAge());
 		emp.setId(emp.getId());
@@ -30,8 +30,7 @@ public class EmployeeDAO {
 		return emp;
 
 	}
-
-	
+///////////////////////////////////////////////////get
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<Employee> getEmployees() {			
 		try {
@@ -44,7 +43,7 @@ public class EmployeeDAO {
 		session.close();
 		}
 	}   	
-
+////////////////////////////////////////////////delete
 	@SuppressWarnings({ "rawtypes" })
 	public int deleteEmployee(int id) {
 		try {
@@ -58,7 +57,7 @@ public class EmployeeDAO {
 		}
 		return id;
 	}
-
+//////////////////////////////////////////////update
 	@SuppressWarnings({ "rawtypes" })
 	public int updateEmployee(int id, Employee emp) {
 	try {
