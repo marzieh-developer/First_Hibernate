@@ -3,7 +3,6 @@
  */
 package com.restful.hibernate;
 
-import java.io.File;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -12,45 +11,70 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+@SuppressWarnings("deprecation")
 public class EmployeeDAO {
+	SessionFactory sf = new Configuration().configure("/resource/hibernate.cfg.xml").buildSessionFactory();
+	Session session = sf.openSession();
+	Transaction tx = session.beginTransaction();
 
+	
 	public Employee addEmployee(Employee emp) {
 		emp.setAge(emp.getAge());
 		emp.setId(emp.getId());
 		emp.setName(emp.getName());
 
-		SessionFactory sf = new Configuration().configure("/resource/hibernate.cfg.xml").buildSessionFactory();
-		Session session = sf.openSession();
-		try {
-			Transaction tx = session.beginTransaction();
+		
 			session.save(emp);
 			tx.commit();
-		} finally {
 			session.close();
-		}
 		return emp;
 
 	}
 
 	
-	public List<Employee> getEmployees() {
-		
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public List<Employee> getEmployees() {			
+		try {
 		Query query=session.createQuery("from Employee");//here persistent class name is Emp  
-		List list=query.list();  
-		System.out.print("sallllllllammmm");
+		List<Employee> list=query.list(); 
+		tx.commit();
+		return list;
 
-	}
+		}finally {
+		session.close();
+		}
+	}   	
 
-   	
-
+	@SuppressWarnings({ "rawtypes" })
 	public int deleteEmployee(int id) {
-		Query query=session.createQuery("delete from Emp where id=100");  
-		query.executeUpdate();  
+		try {
+		
+		Query query=session.createQuery("delete from Employee where id =: id"); 
+		query.setInteger("id", id);
+		query.executeUpdate(); 
+		tx.commit();
+		}finally {
+		session.close();
+		}
 		return id;
 	}
 
+	@SuppressWarnings({ "rawtypes" })
 	public int updateEmployee(int id, Employee emp) {
-		return 0;
+	try {
+		Query query=session.createQuery("update Employee  set name=:name , age=:age where id=:id"); 
+		query.setInteger("id", id);
+		query.setParameter("name",emp.getName());  
+		query.setInteger("age",emp.getAge());  
+		  
+		int status=query.executeUpdate(); 
+		tx.commit();
+		return status;
+
+	}finally{
+		session.close();
+
+	}
 	}
 
 }
